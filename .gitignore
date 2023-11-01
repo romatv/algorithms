@@ -1,0 +1,23 @@
+# Project specific
+.cache
+
+# Directories
+/algorithms
+
+# Python specific
+.pyc
+.pyo
+__pycache__/
+
+# Environment specific
+.env
+
+# PyCharm specific
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Editor settings (optional, adjust as needed)
+*.editorconfig
+*.settings/
