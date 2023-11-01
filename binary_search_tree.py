@@ -123,11 +123,3 @@ class BinarySearchTree:
         if value > node.value:
             return self.search_node(node.right, value)
 
-    def delete_node(self, node, value):
-        if node is None or value == node.value:
-            return node
-        if value < node.value:
-            return self.search_node(node.left, value)
-        if value > node.value:
-            return self.search_node(node.right, value)
-
