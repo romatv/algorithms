@@ -30,15 +30,13 @@ class BinarySearchTree:
     - All values in the right subtree are greater than the node's value.
 
     Attributes:
-    root (Node): The root node of the binary search tree.
+    node (Node): The node node of the binary search tree.
     result: list, placeholder for result of traversal.
 
-    Methods:
-    - insert(value): Insert a value into the binary search tree.
-    - inorder_traversal(node): Perform an inorder traversal of the BST, returning values in ascending order.
-    - reverse_inorder_traversal(node): Perform a reverse_inorder traversal of the BST, returning values with counts.
-
     Note: This implementation supports duplicate values.
+    If we want to represent trea with null values as empty nodes: add these lines to traversal functions.
+            if node is None:
+            self.result.append('null')
     """
     def __init__(self):
         self.root = None
@@ -113,7 +111,7 @@ class BinarySearchTree:
 
     def search_node(self, node, value):
         """
-        Search for a node with chosen value in binary search tree.
+        Search for a node with chosen value.
         Returns node with value if found, otherwise returns None.
         """
         if node is None or value == node.value:
@@ -122,4 +120,41 @@ class BinarySearchTree:
             return self.search_node(node.left, value)
         if value > node.value:
             return self.search_node(node.right, value)
+
+    def delete_node(self, node, value):
+        """
+        Deletes node with specified value and returns the modified BST root (or selected subtree).
+        """
+
+        # If current node is None, it's an empty tree.
+        if node is None:
+            return node
+
+        # If value to delete is bigger than current node value, earch in the right subtree, else in left.
+        if node.value < value:
+            node.right = self.delete_node(node.right, value)
+        elif node.value > value:
+            node.left = self.delete_node(node.left, value)
+
+        # If the value matches the current node value, it needs to be deleted.
+        # So we check if this node has one child: left or right.
+        else:
+            if node.left is None:
+                return node.right
+            elif node.right is None:
+                return node.left
+
+            # If it has both left and right children, means that we have to find the smallest successor of
+            # current node in right subtree, and replace current node value with this successor value.
+            current = node.right
+            # Here we go to the deepest left node.
+            while current.left is not None:
+                current = current.left
+            # Here we assign successor value to current node value.
+            node.val = current.value
+            # Here we delete the in-order successor from that right subtree.
+            node.right = self.delete_node(node.right, node.value)
+        # return modified node after the deletion.
+        return node
+
 
