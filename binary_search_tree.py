@@ -123,7 +123,9 @@ class BinarySearchTree:
 
     def delete_node(self, node, value):
         """
-        Deletes node with specified value and returns the modified BST root (or selected subtree).
+        Deletes node with specified value and returns the modified node (tree) rearranged after
+        deletion of required node.
+        It handles deletion of leaf node, node with one child and node with both children.
         """
 
         # If current node is None, it's an empty tree.
