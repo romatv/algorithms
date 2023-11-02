@@ -1,3 +1,6 @@
+from collections import deque
+
+
 class Node:
     """
     Class defining a node for a binary search tree (BST).
@@ -12,7 +15,7 @@ class Node:
     left (Node): The left child node.
     right (Node): The right child node.
     value: The value stored in the node.
-    count (int): The count of how many times the value appears in the tree.
+    count (int): The count of how many times the value appears in the tree. Default is 1.
     """
     def __init__(self, value):
         self.left = None
@@ -30,14 +33,14 @@ class BinarySearchTree:
     - All values in the right subtree are greater than the node's value.
 
     Attributes:
-    node (Node): The node node of the binary search tree.
-    result: list, placeholder for result of traversal.
+    node (Node): The node of the binary search tree.
+    result: list, placeholder for results of traversal or other methods. Added for test convenience,
+    though shall not be used if tree is used in real cases, as it's not self cleared after traversals.
+    In case of real use, add separate result list in each method or use other way.
 
     Note: This implementation supports duplicate values.
-    If we want to represent trea with null values as empty nodes: add these lines to traversal functions.
-            if node is None:
-            self.result.append('null')
     """
+
     def __init__(self):
         self.root = None
         self.result = []
@@ -109,6 +112,24 @@ class BinarySearchTree:
             self.result.append(f'{node.value}({node.count})')
         return self.result
 
+    def find_max_node(self, node):
+        """
+        Find node with maximum value and return it.
+        """
+        if node.right is not None:
+            return self.find_max_node(node.right)
+        else:
+            return node
+
+    def find_min_node(self, node):
+        """
+        Find node with minimum value and return it.
+        """
+        if node.left is not None:
+            return self.find_min_node(node.left)
+        else:
+            return node
+
     def search_node(self, node, value):
         """
         Search for a node with chosen value.
@@ -159,4 +180,60 @@ class BinarySearchTree:
         # return modified node after the deletion.
         return node
 
+    def bfs_level_order_traversal(self, root):
+        """
+        Performs level order tree search, starting from root down to leafes.
+        Returns list of node values and their counts as result.
+        """
+        if root is None:
+            return
 
+        # Create a double edge queue data structure to effectively
+        # pop elements with O(1) time complexity. Then append root node to it.
+        queue = deque()
+        queue.append(root)
+
+        # While queue is not empty, pop its node and write value to result list.
+        # Then add left and right childs of this node to queue and repeat.
+        while queue:
+            node = queue.popleft()
+            self.result.append(f'{node.value}({node.count})')
+
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+
+        return self.result
+
+    def bfs_level_order_traversal_with_height(self, root):
+        """
+        Performs level order tree search, starting from root down to leafes, by keeping track of tree height.
+        Returns list of node values and their counts as result.
+        This adds posibility to perform specific operations at chosen level height (depth) if needed.
+        """
+        if root is None:
+            return
+
+        queue = deque()
+        queue.append(root)
+
+        while queue:
+            # Number of nodes at the current level
+            level_size = len(queue)
+            # Result of current level
+            level_result = []
+
+            for _ in range(level_size):
+                node = queue.popleft()
+                level_result.append(f'{node.value}({node.count})')
+
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+
+            for i in level_result:
+                self.result.append(i)
+
+        return self.result
